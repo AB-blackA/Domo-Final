@@ -2,9 +2,7 @@ const models = require('../models');
 
 const { Domo } = models;
 
-const makerPage = (req, res) => {
-  return res.render('app');
-};
+const makerPage = (req, res) => res.render('app');
 
 const getDomos = async (req, res) => {
   try {
@@ -33,7 +31,7 @@ const makeDomo = async (req, res) => {
   try {
     const newDomo = new Domo(domoData);
     await newDomo.save();
-    return res.status(201).json({ name: newDomo.name, age: newDomo.age, name: newDomo.job })
+    return res.status(201).json({ name: newDomo.name, age: newDomo.age, job: newDomo.job });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -43,27 +41,28 @@ const makeDomo = async (req, res) => {
   }
 };
 
-// deleteDomo endpoint. 
-// i had to try quite a bit to understand how Mongo wanted to read the id but after awhile i figured it out.
+// deleteDomo endpoint.
+// i had to try quite a bit to understand how Mongo wanted to read the id but
+// after awhile i figured it out.
 const deleteDomo = async (req, res) => {
   try {
-      const {id} = req.body;
-      if (!id) {
-          return res.status(400).json({ error: `No ID provided: ${req.body}` });
-      }
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ error: `No ID provided: ${req.body}` });
+    }
 
-      const deletedDomo = await Domo.findByIdAndDelete(id);
+    const deletedDomo = await Domo.findByIdAndDelete(id);
 
-      // this seems a little useless but while I was trying to get the domolist to refresh on delete
-      // it was very helpful
-      if (!deletedDomo) {
-          return res.status(404).json({ error: 'Domo not found' });
-      }
+    // this seems a little useless but while I was trying to get the domolist to refresh on delete
+    // it was very helpful
+    if (!deletedDomo) {
+      return res.status(404).json({ error: 'Domo not found' });
+    }
 
-      res.status(200).json({ message: 'Domo deleted successfully' });
+    return res.status(200).json({ message: 'Domo deleted successfully' });
   } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'An error occurred deleting the Domo' });
+    console.error(err);
+    return res.status(500).json({ error: 'An error occurred deleting the Domo' });
   }
 };
 
