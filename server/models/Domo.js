@@ -15,6 +15,14 @@ const DomoSchema = new mongoose.Schema({
     min: 0,
     required: true,
   },
+
+  // new job functionality
+  job: {
+    type: String,
+    required: true,
+    trime: true,
+    set: setName,
+  },
   owner: {
     type: mongoose.Schema.ObjectId,
     required: true,
